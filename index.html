@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#0B3D91" />
+<meta name="description" content="LKPD Interaktif Berpikir Komputasional — Graf Berbobot dan Rute Terpendek. Game edukasi 'Misi Kurir Muda' untuk SMP Kelas 8. SMP Negeri 19 Kota Bekasi." />
+<title>Misi Kurir Muda — Petualangan Graf Berbobot | LKPD Informatika</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<a class="skip-link" href="#app-main">Lewati ke konten / Skip to content</a>
+
+<!-- ================= HEADER ================= -->
+<header class="app-header">
+  <div class="header-inner">
+    <div class="brand">
+      <img id="school-logo" class="school-logo" src="logo.png"
+           alt="Logo SMP Negeri 19 Kota Bekasi" width="48" height="48" />
+      <div class="brand-text">
+        <span class="brand-title">Misi Kurir Muda</span>
+        <span class="brand-sub" data-i18n="appSubtitle">Petualangan Graf Berbobot (Weighted Graph Adventure)</span>
+      </div>
+    </div>
+
+    <div class="header-tools">
+      <div class="stat-chip" title="Nyawa / Lives">
+        <span class="stat-label" data-i18n="lives">Nyawa</span>
+        <span id="lives-display" class="stat-value" aria-live="polite">❤️❤️❤️</span>
+      </div>
+      <div class="stat-chip" title="Skor / Score">
+        <span class="stat-label" data-i18n="score">Skor</span>
+        <span id="score-display" class="stat-value mono" aria-live="polite">0</span>
+      </div>
+      <div class="stat-chip timer-chip" id="timer-chip" hidden>
+        <span class="stat-label" data-i18n="time">Waktu</span>
+        <span id="timer-display" class="stat-value mono">60</span>
+      </div>
+
+      <button id="btn-lang" class="icon-btn" aria-label="Ganti bahasa Indonesia atau Inggris / Change language">🌐 <span id="lang-label">ID</span></button>
+      <button id="btn-dark" class="icon-btn" aria-label="Mode gelap / Dark mode">🌙</button>
+      <button id="btn-sound" class="icon-btn" aria-label="Suara umpan balik / Feedback sound">🔊</button>
+      <button id="btn-glossary" class="icon-btn" aria-label="Buka glosarium / Open glossary">📖</button>
+      <button id="btn-about" class="icon-btn" aria-label="Cara bermain / How to play">❓</button>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0" id="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <span class="progress-text" id="progress-text">Level 0 / 4</span>
+  </div>
+</header>
+
+<!-- ================= MAIN ================= -->
+<main id="app-main">
+
+  <!-- ---------- WELCOME / LEVEL 0 ---------- -->
+  <section id="screen-welcome" class="screen active" aria-labelledby="welcome-title">
+    <div class="card">
+      <div class="hero">
+        <span class="hero-badge">LKPD Interaktif · Berpikir Komputasional</span>
+        <h1 id="welcome-title" class="hero-title">Misi Kurir Muda — Petualangan Graf Berbobot</h1>
+        <p class="hero-sub" data-i18n="welcomeSub">Kamu adalah kurir muda SMP Negeri 19 Kota Bekasi. Bantu Pak Rudi, Kirana, dan Bu Sari mengantar paket lewat rute terbaik!</p>
+      </div>
+
+      <div class="level-head">
+        <h2 class="level-title" data-i18n="level0Title">Level 0 — Tutorial Interaktif (Interactive Tutorial)</h2>
+      </div>
+
+      <div class="tutorial-grid">
+        <div class="graph-panel">
+          <h3 class="panel-title" data-i18n="tutorialGraphTitle">Peta Sederhana (Simple Map)</h3>
+          <div id="graph-level0" class="graph-wrap"></div>
+        </div>
+
+        <div class="tutorial-side">
+          <div class="instruction-box" id="tutorial-instruction">
+            <span class="ib-icon">👉</span>
+            <span data-i18n="tutorialInstruction">Klik simpul (vertex) untuk mengenal namanya. / Click a node to learn its name.</span>
+          </div>
+
+          <div class="discovery-box">
+            <h4 data-i18n="discoveryTitle">Daftar Penjelajahan (Exploration List)</h4>
+            <div class="chip-label" data-i18n="nodesLabel">Simpul (Vertex)</div>
+            <div id="discovery-nodes" class="chip-row"></div>
+            <div class="chip-label" data-i18n="edgesLabel">Sisi (Edge)</div>
+            <div id="discovery-edges" class="chip-row"></div>
+          </div>
+
+          <div class="info-card" id="tutorial-info" aria-live="polite">
+            <p class="muted" data-i18n="tutorialInfoEmpty">Belum ada yang dipilih. Mulailah menjelajah peta!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="blitz-row">
+        <label class="switch-label" for="blitz-toggle">
+          <input type="checkbox" id="blitz-toggle" />
+          <span data-i18n="blitzLabel">Mode Tantangan Kilat (Blitz Challenge) — 60 detik per level</span>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button id="btn-start" class="btn btn-primary" disabled aria-label="Mulai Level 1">
+          Mulai<br /><small>Start</small>
+        </button>
+        <button id="btn-about-2" class="btn btn-ghost" aria-label="Cara bermain">
+          Cara Bermain<br /><small>How to Play</small>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- LEVEL 1 ---------- -->
+  <section id="screen-level1" class="screen" aria-labelledby="l1-title">
+    <div class="card">
+      <div class="level-head">
+        <h2 id="l1-title" class="level-title" data-i18n="level1Title">Level 1 — Kenali Bagian Graf (Identify the Graph Parts)</h2>
+        <span class="level-counter" id="l1-counter">Soal 1 dari 5</span>
+      </div>
+      <div class="graph-panel">
+        <div id="graph-level1" class="graph-wrap"></div>
+        <p class="graph-caption" data-i18n="graphCaption">Peta Graf Utama — 6 simpul, 9 sisi. Setiap sisi punya bobot waktu (menit) dan biaya (rupiah).</p>
+      </div>
+      <div id="l1-body" class="level-body"></div>
+    </div>
+  </section>
+
+  <!-- ---------- LEVEL 2 ---------- -->
+  <section id="screen-level2" class="screen" aria-labelledby="l2-title">
+    <div class="card">
+      <div class="level-head">
+        <h2 id="l2-title" class="level-title" data-i18n="level2Title">Level 2 — Hitung Total Bobot (Calculate the Total Weight)</h2>
+        <span class="level-counter" id="l2-counter">Soal 1 dari 4</span>
+      </div>
+      <div class="graph-panel">
+        <div id="graph-level2" class="graph-wrap"></div>
+        <p class="graph-caption" data-i18n="graphCaption2">Gunakan peta ini untuk menjumlahkan bobot setiap sisi pada rute.</p>
+      </div>
+      <div id="l2-body" class="level-body"></div>
+    </div>
+  </section>
+
+  <!-- ---------- LEVEL 3 ---------- -->
+  <section id="screen-level3" class="screen" aria-labelledby="l3-title">
+    <div class="card">
+      <div class="level-head">
+        <h2 id="l3-title" class="level-title" data-i18n="level3Title">Level 3 — Pilih Rute Terbaik (Pick the Best Route)</h2>
+        <span class="level-counter" id="l3-counter">Soal 1 dari 4</span>
+      </div>
+      <div class="graph-panel">
+        <div id="graph-level3" class="graph-wrap"></div>
+        <p class="graph-caption" data-i18n="graphCaption3">Baca skenario dengan teliti, lalu pilih rute yang paling sesuai.</p>
+      </div>
+      <div id="l3-body" class="level-body"></div>
+    </div>
+  </section>
+
+  <!-- ---------- LEVEL 4 ---------- -->
+  <section id="screen-level4" class="screen" aria-labelledby="l4-title">
+    <div class="card">
+      <div class="level-head">
+        <h2 id="l4-title" class="level-title" data-i18n="level4Title">Level 4 — Jelaskan Alasanmu (Explain Your Reasoning)</h2>
+        <span class="level-counter" id="l4-counter">Soal 1 dari 2</span>
+      </div>
+      <div class="graph-panel">
+        <div id="graph-level4" class="graph-wrap"></div>
+        <p class="graph-caption" data-i18n="graphCaption4">Tuliskan alasanmu dengan menyebut angka dari peta di atas.</p>
+      </div>
+      <div id="l4-body" class="level-body"></div>
+    </div>
+  </section>
+
+  <!-- ---------- RESULT ---------- -->
+  <section id="screen-result" class="screen" aria-labelledby="result-title">
+    <div class="card">
+      <h2 id="result-title" class="hero-title center" data-i18n="resultTitle">Misi Selesai! 🎉</h2>
+      <div class="stars" id="result-stars" aria-label="Bintang">⭐⭐⭐</div>
+      <p class="final-score mono"><span id="result-score">0</span> / 240</p>
+      <p class="badge-text" id="result-badge"></p>
+      <p class="best-text" id="result-best"></p>
+
+      <div class="name-field">
+        <label for="student-name" data-i18n="nameLabel">Nama Murid (Student Name)</label>
+        <input id="student-name" type="text" maxlength="40" placeholder="Tulis namamu di sini…" />
+      </div>
+
+      <div class="actions">
+        <button id="btn-cert" class="btn btn-primary" aria-label="Unduh sertifikat digital">
+          Unduh Sertifikat Digital<br /><small>Download Digital Certificate</small>
+        </button>
+        <button id="btn-review" class="btn btn-secondary" aria-label="Lihat pembahasan">
+          Lihat Pembahasan<br /><small>See Review</small>
+        </button>
+        <button id="btn-again" class="btn btn-ghost" aria-label="Main lagi">
+          Main Lagi<br /><small>Play Again</small>
+        </button>
+      </div>
+
+      <div id="review-box" class="review-box" hidden></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="app-footer">
+  <p>LKPD Informatika Kelas 8 · Graf Berbobot dan Rute Terpendek · © 2026 SMP Negeri 19 Kota Bekasi</p>
+</footer>
+
+<!-- ================= FLOATING BUTTONS ================= -->
+<div class="fab-stack">
+  <button id="btn-calc" class="fab" aria-label="Buka kalkulator bantu / Open helper calculator">🧮</button>
+</div>
+
+<!-- ================= CALCULATOR PANEL ================= -->
+<div class="calc-panel" id="calc-panel" hidden>
+  <div class="panel-head">
+    <strong data-i18n="calcTitle">Kalkulator Bantu (Helper Calculator)</strong>
+    <button class="panel-close" id="calc-close" aria-label="Tutup kalkulator">✕</button>
+  </div>
+  <p class="panel-hint" data-i18n="calcHint">Tulis angka yang ingin dijumlahkan, pisahkan dengan tanda +.</p>
+  <input id="calc-input" class="calc-input mono" type="text" value="5+6+5" aria-label="Masukan angka penjumlahan" />
+  <div class="calc-result mono" id="calc-result">= 16</div>
+  <div class="calc-keypad" id="calc-keypad">
+    <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+    <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+    <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+    <button data-k="0">0</button><button data-k="+">+</button><button data-k="C">C</button>
+  </div>
+</div>
+
+<!-- ================= GLOSSARY SIDE PANEL ================= -->
+<aside class="side-panel" id="glossary-panel" aria-hidden="true" aria-labelledby="glossary-title">
+  <div class="panel-head">
+    <strong id="glossary-title" data-i18n="glossaryTitle">Glosarium (Glossary) ID ↔ EN</strong>
+    <button class="panel-close" id="glossary-close" aria-label="Tutup glosarium">✕</button>
+  </div>
+  <ul class="glossary-list" id="glossary-list"></ul>
+</aside>
+<div class="panel-backdrop" id="panel-backdrop" hidden></div>
+
+<!-- ================= MODAL: FEEDBACK ================= -->
+<div class="modal-overlay" id="modal-feedback" role="dialog" aria-modal="true" aria-labelledby="fb-title" hidden>
+  <div class="modal-box">
+    <div class="fb-icon" id="fb-icon">✅</div>
+    <h3 id="fb-title">Hebat!</h3>
+    <p id="fb-text"></p>
+    <div class="fb-formula mono" id="fb-formula"></div>
+    <button class="btn btn-primary" id="fb-next" aria-label="Lanjut ke soal berikutnya">Lanjut<br /><small>Next</small></button>
+  </div>
+</div>
+
+<!-- ================= MODAL: GAME OVER ================= -->
+<div class="modal-overlay" id="modal-gameover" role="dialog" aria-modal="true" aria-labelledby="go-title" hidden>
+  <div class="modal-box">
+    <div class="fb-icon">💔</div>
+    <h3 id="go-title" data-i18n="gameOverTitle">Nyawa Habis!</h3>
+    <p data-i18n="gameOverText">Jangan menyerah, Kurir Muda. Ayo coba lagi dari Level 1.</p>
+    <button class="btn btn-primary" id="go-retry" aria-label="Coba lagi dari Level 1">Coba Lagi dari Level 1<br /><small>Retry from Level 1</small></button>
+  </div>
+</div>
+
+<!-- ================= MODAL: ABOUT ================= -->
+<div class="modal-overlay" id="modal-about" role="dialog" aria-modal="true" aria-labelledby="about-title" hidden>
+  <div class="modal-box modal-wide">
+    <h3 id="about-title" data-i18n="aboutTitle">Cara Bermain (How to Play)</h3>
+    <div id="about-body" class="about-body"></div>
+    <button class="btn btn-primary" id="about-close" aria-label="Tutup panduan">Mengerti<br /><small>Got it</small></button>
+  </div>
+</div>
+
+<!-- ================= CONFETTI LAYER ================= -->
+<div class="confetti-layer" id="confetti-layer" aria-hidden="true"></div>
+
+<!-- ================= PRINT CERTIFICATE ================= -->
+<div id="print-certificate"></div>
+
+<script src="script.js" defer></script>
+</body>
+</html>
