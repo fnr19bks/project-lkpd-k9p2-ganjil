@@ -408,7 +408,7 @@ const I18N = {
     certPlace:'Bekasi',
     certTeacher:'Guru Informatika',
     certHead:'Kepala Sekolah',
-    certFoot:'LKPD Informatika Kelas 8 · Graf Berbobot dan Rute Terpendek · © 2026 SMP Negeri 19 Kota Bekasi'
+    certFoot:'LKPD Informatika Kelas 9 · Graf Berbobot dan Rute Terpendek · © 2026 SMP Negeri 19 Kota Bekasi'
   },
   en: {
     appSubtitle:'Weighted Graph Adventure (Petualangan Graf Berbobot)',
@@ -485,7 +485,7 @@ const I18N = {
     certPlace:'Bekasi',
     certTeacher:'Informatics Teacher',
     certHead:'School Principal',
-    certFoot:'LKPD Informatika Kelas 8 · Graf Berbobot dan Rute Terpendek · © 2026 SMP Negeri 19 Kota Bekasi'
+    certFoot:'LKPD Informatika Kelas 9 · Graf Berbobot dan Rute Terpendek · © 2026 SMP Negeri 19 Kota Bekasi'
   }
 };
 
